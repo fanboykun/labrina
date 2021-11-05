@@ -16,7 +16,7 @@ class CreateAlternativeCriteriaTable extends Migration
         Schema::create('alternative_criteria', function (Blueprint $table) {
             $table->foreignId('alternative_id')->cascadeOnDelete()->constrained();
             $table->foreignId('criteria_id')->cascadeOnDelete()->constrained();
-            $table->integer('value');
+            $table->float('value');
             $table->foreignId('project_id')->cascadeOnDelete()->constrained();
             $table->primary(['alternative_id','criteria_id']);
             $table->timestamps();

@@ -4,6 +4,14 @@ namespace App\Services;
 
 class MooraService
 {
+    public function execute(array $data)
+    {
+        $normalized_criterias = $this->normalize($data);
+        $optimized_criterias = $this->optimize($normalized_criterias);
+        $finalized_alternatives = $this->finalize($optimized_criterias);
+        return $finalized_alternatives;
+    }
+
     public function normalize(array $criterias)
     {
         $normalized_criterias[] = [];
@@ -18,7 +26,6 @@ class MooraService
                 $normalized_criterias[$key]['alternatives'][$k]['alternative_id'] = $alternative['alternative_id'];
                 $normalized_criterias[$key]['alternatives'][$k]['value'] = $alternative['value'];
                 $normalized_criterias[$key]['alternatives'][$k]['normalized_value'] = $alternative['value'] / $normalized_criteria_values;
-                // $normalized_criterias[$key]['alternatives'][$k]['normalized_value'] = round($alternative['value'] / $normalized_criteria_values, 2);
             }
         }
         $finalize_normalized = $this->groupByAlternativeId($normalized_criterias);
@@ -36,6 +43,13 @@ class MooraService
         }
 
         return $opmitized_alternatives;
+    }
+
+    public function finalize(array $optimized_criterias)
+    {
+        $sorted_value = $this->sortByOptimizedValue($optimized_criterias);
+        $ranked_alternatives = $this->assignRank($sorted_value);
+        return $ranked_alternatives;
     }
 
     private function calculatePow(array $numbers)

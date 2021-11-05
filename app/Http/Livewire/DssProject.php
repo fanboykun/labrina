@@ -5,7 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\Project;
 use App\Models\Rangking;
-use App\Services\MooraService;
+use App\Services\Dss;
 
 class DssProject extends Component
 {
@@ -38,13 +38,18 @@ class DssProject extends Component
         return view('livewire.dss-project');
     }
 
-    public function testCalculate(MooraService $mooraService)
+    public function beginCalculate(Dss $dss)
     {
-        $normalized_criterias = $mooraService->normalize($this->criterias);
-        $optimized_criterias = $mooraService->optimize($normalized_criterias);
-        $sorted_value = $mooraService->sortByOptimizedValue($optimized_criterias);
-        $ranked_alternatives = $mooraService->assignRank($sorted_value);
-        foreach ($ranked_alternatives as $key => $rank) {
+        $ranked_alternatives = $dss->operate($this->project, $this->criterias);
+        // dd($ranked_alternatives);
+        $this->saveToRank($ranked_alternatives);
+        $this->emit('openTab', 'rangkings');
+        $this->reset('criterias');
+    }
+
+    public function saveToRank(array $result)
+    {
+        foreach ($result as $key => $rank) {
             $rangking = new Rangking();
             $rangking->result = $rank['optimized_value'];
             $rangking->rank = $rank['rank'];
@@ -52,8 +57,7 @@ class DssProject extends Component
             $rangking->alternative()->associate($rank['alternative_id']);
             $rangking->save();
         }
-        $this->emit('openTab', 'rangkings');
-        $this->reset('criterias');
+        return true;
     }
 
 
