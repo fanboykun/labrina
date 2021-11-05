@@ -13,21 +13,21 @@ class Alternative extends Component
     public $name;
     public $a_code = 1;
     public $criterias = [];
-    public $project_id;
+    public $project;
 
     // helper
     public $initial = "A";
     public $inputs = [];
     public $cols;
-    public $column = 3;
+    public $column = 2;
 
     public function mount(Project $project)
     {
-        $this->project_id = $project;
-        $this->cols = Criteria::count() + $this->column;
-        $this->criterias = Criteria::all();
+        $this->project = $project;
+        $this->cols = Criteria::where('project_id', $project->id)->count() + $this->column;
+        $this->criterias = Criteria::where('project_id', $project->id)->get();
         $this->inputs[] =
-            ['name' => '', 'a_code' => $this->initial.''.$this->a_code, 'criterias' => $this->criterias];
+            ['name' => '', 'criterias' => $this->criterias];
     }
 
     public function render()
@@ -40,7 +40,7 @@ class Alternative extends Component
 
         $this->a_code++;
         $this->inputs[] =
-            ['name' => '', 'a_code' => $this->initial.''.$this->a_code, 'criterias' => $this->criterias];
+            ['name' => '', 'criterias' => $this->criterias];
     }
 
     public function remove($key)
@@ -61,19 +61,19 @@ class Alternative extends Component
             foreach($this->inputs as $data)
                 {
                       $alternative =  AlternativeModel::create([
-                            'project_id' => $this->project_id->id,
+                            'project_id' => $this->project->id,
                             'name' => $data['name'],
-                            'a_code' => $data['a_code'],
+                            // 'a_code' => $data['a_code'],
                         ]);
                         foreach ($data['criterias'] as $criteria) {
-                            $alternative->criterias()->attach($criteria['id'], ['value' => $criteria['value']]);
+                            $alternative->criterias()->attach($criteria['id'], ['project_id' => $this->project->id, 'value' => $criteria['value']]);
                         }
                 }
-        $this->reset(['name','a_code','inputs']);
+        $this->reset(['name','inputs']);
         $this->cols = Criteria::count() + $this->column;
         $this->inputs[] =
-        ['name' => '', 'a_code' => $this->initial.''.$this->a_code, 'criterias' => $this->criterias];
-        $this->emit('created', 4);
+        ['name' => '', 'criterias' => $this->criterias];
+        $this->emit('openTab', 'calculate');
 
     }
 }

@@ -7,36 +7,36 @@ use Livewire\Component;
 
 class DecissionSupportSystem extends Component
 {
-    public $tab = 1;
-    public $project_id;
+    public $project;
+    public $selected_project;
+    public $tab = 'criteria' ?? '';
 
-    public $listeners = ['created' => 'created',
-     'projectAdded' => 'added'];
 
+    public $queryString = [
+        'tab' => ['except' => '']
+    ];
+
+    public $listeners = ['openTab' => 'changeTab'];
+
+    public function mount(Project $project)
+    {
+        // Project::find($project->id);
+        if(Project::find($project->id) != null){
+            $this->project = $project;
+            $this->selected_project = $project;
+            // $this->tab = 'criteria';
+        }else{
+            $this->tab = '';
+        }
+    }
 
     public function render()
     {
         return view('livewire.decission-support-system');
     }
 
-    public function added(Project $project)
+    public function changeTab($tab)
     {
-        $this->project_id = $project;
-    }
-
-    public function tabs($key)
-    {
-        if ($key === 1) {
-            $this->tab = $key;
-        }
-        elseif ($key != 1 and $this->project_id != NULL){
-            $this->tab = $key;
-        }
-
-    }
-
-    public function created($key)
-    {
-        $this->tab = $key;
+        $this->tab = $tab;
     }
 }

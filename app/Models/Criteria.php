@@ -20,8 +20,4 @@ class Criteria extends Model
     {
         return $this->belongsToMany(Alternative::class)->withPivot('value');
     }
-    public function rangkings()
-    {
-        return $this->hasMany(Rangking::class);
-    }
 }

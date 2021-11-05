@@ -19,7 +19,7 @@ class CreateCriteriasTable extends Migration
             $table->string('name')->required();
             $table->string('c_code')->nullable();
             $table->boolean('is_cost')->nullable()->default(false);
-            $table->integer('weight')->required();
+            $table->float('weight')->required();
             $table->integer('max_value')->nullable();
             $table->timestamps();
         });

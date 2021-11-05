@@ -20,9 +20,9 @@ class Alternative extends Model
     {
         return $this->belongsToMany(Criteria::class)->withPivot('value');
     }
-    public function rangkings()
+    public function rangking()
     {
-        return $this->hasMany(Rangking::class);
+        return $this->hasOne(Rangking::class);
     }
     public function getValueAttribute($key)
     {

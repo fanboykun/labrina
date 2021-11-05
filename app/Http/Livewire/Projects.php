@@ -10,47 +10,34 @@ class Projects extends Component
     // Project
     public $name;
     public $type;
-    public $project_id;
+    public $project_list;
+    public $selected_project;
+    public $create_new;
+
 
     protected $rules = [
-        'name' => 'required',
-        'type' => 'required'
+        'selected_project' => 'required_if:create_new,false',
+        'name' => 'required_if:selected_project,null',
+        'type' => 'required_if:selected_project,null'
     ];
 
-    public function mount($project)
-    {
-        if($project){
-            $this->project_id = $project->id;
-            $this->name = $project->name;
-            $this->type = $project->type;
-        }
-            else{
-                $this->name = '';
-            $this->type = '';
-            }
-    }
 
     public function render()
     {
+        $this->project_list = Project::all();
         return view('livewire.projects');
     }
 
     public function addProject()
     {
         $this->validate();
-        $currentProject = Project::where('id', $this->project_id)->first();
-        if($currentProject)
-        {
-            $currentProject->update(['name'=> $this->name, 'type' => $this->type]);
-            $this->emit('projectAdded', $currentProject->id);
-        }
-        else {
-            $project = new Project;
-            $project->name = $this->name;
-            $project->type = $this->type;
-            $project->save();
-            $this->emit('projectAdded', $project->id);
-        }
-        $this->emit('created', 2);
+
+        $project = Project::firstOrCreate(
+            ['id' => $this->selected_project],
+            ['name' => $this->name, 'type' => $this->type]);
+
+        $this->reset(['name', 'type']);
+        // $this->emit('created', $project, 'criteria');
+        return redirect()->route('project.show', $project);
     }
 }

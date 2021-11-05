@@ -18,9 +18,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/form', function () {
-    return view('form');
-});
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -29,5 +26,6 @@ Route::get('/dashboard', function () {
 require __DIR__.'/auth.php';
 
 Route::get('/decission-support-system', DecissionSupportSystem::class)->middleware(['auth'])->name('decission-support-system');
-Route::get('/calculations', Calculations::class)->middleware(['auth'])->name('calculations');
+Route::get('/decission-support-system/{project}', DecissionSupportSystem::class)->middleware(['auth'])->name('project.show');
+// Route::get('/calculations', Calculations::class)->middleware(['auth'])->name('calculations');
 

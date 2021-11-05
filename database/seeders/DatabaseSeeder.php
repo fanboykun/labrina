@@ -13,6 +13,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        $this->call(ProjectWaspasSeeder::class);
+        $this->call(ProjectMooraSeeder::class);
+        $this->call(CriteriaMooraSeeder::class);
+        $this->call(AlternativeMooraSeeder::class);
     }
 }
