@@ -6,25 +6,45 @@
     </x-slot>
     <div class="flex flex-col w-full">
         @if ($project != null)
-            <div class="grid grid-cols-3 h-12 mt-4 card place-items-center">
-                <div class="col-span-3 px-5">
-                    <button type="button" wire:click="$emit('openTab', 'criteria')" class="btn {{ $tab === 'criteria' ? 'btn-active' : 'btn-outline' }} btn-accent mx-5" {{ is_null($project) ? 'disabled' : '' }}>Criteria</button>
-                    <button type="button" wire:click="$emit('openTab', 'alternative')" class="btn {{ $tab === 'alternative' ? 'btn-active' : 'btn-outline' }} btn-accent mx-5" {{ is_null($project) ? 'disabled' : '' }}>Alternative</button>
-                    <button type="button" wire:click="$emit('openTab', 'calculation')" class="btn {{ $tab === 'calculation' ? 'btn-active' : 'btn-outline' }} btn-accent mx-5" {{ is_null($project) ? 'disabled' : '' }}>Calculation</button>
-                    <button type="button" wire:click="$emit('openTab', 'rangkings')" class="btn {{ $tab === 'rangkings' ? 'btn-active' : 'btn-outline' }} btn-accent mx-5" {{ is_null($project) ? 'disabled' : '' }}>Rangking</button>
-                </div>
+            <div class="flex px-8 overflow-x-auto">
+                <ul class="w-full steps">
+                    <li data-content="{{ $project->has('criterias') ? '✓' : '✕' }}"
+                        type="button" wire:click="$emit('openTab', 'criteria')"
+                        class="step @if ($project->has('criterias')) step-primary @endif"
+                        style="cursor: pointer">
+                        Criteria
+                    </li>
+                    <li data-content="{{ $project->has('alternatives') ? '✓' : '✕' }}"
+                        type="button" wire:click="$emit('openTab', 'alternative')"
+                        class="step @if ($project->has('alternatives')) step-primary @endif"
+                        style="cursor: pointer">
+                        Alternative
+                    </li>
+                    <li data-content="{{ $project->has('rangkings') ? '✓' : '✕' }}"
+                        type="button" wire:click="$emit('openTab', 'calculation')"
+                        class="step @if ($project->has('rangkings')) step-primary @endif"
+                        style="cursor: pointer">
+                        Calculation
+                    </li>
+                    <li data-content="{{ $project->has('rangkings') ? '✓' : '✕' }}"
+                        type="button" wire:click="$emit('openTab', 'rangkings')"
+                        class="step @if ($project->has('rangkings')) step-primary @endif"
+                        style="cursor: pointer">
+                        Rangkings
+                    </li>
+
+                  </ul>
             </div>
             <div class="divider before:bg-gray-200 after:bg-gray-200"></div>
-            @if ($tab === 'criteria')
-            <livewire:criteria :project="$project" />
-            @elseif ($tab === 'alternative')
-            <livewire:alternative :project="$project" />
-            @elseif ($tab === 'calculation')
-            <livewire:dss-project :project="$project" />
-            @elseif ($tab === 'rangkings')
-            <livewire:rangkings :project="$project" />
-            @endif
-
+                @if ($tab === 'criteria')
+                <livewire:criteria :project="$project" />
+                @elseif ($tab === 'alternative')
+                <livewire:alternative :project="$project" />
+                @elseif ($tab === 'calculation')
+                <livewire:dss-project :project="$project" />
+                @elseif ($tab === 'rangkings')
+                <livewire:rangkings :project="$project" />
+                @endif
         @elseif($project == null)
         <livewire:projects/>
 

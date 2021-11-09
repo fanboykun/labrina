@@ -5,68 +5,53 @@
             <x-slot name="description">{{ __('The alternative(s) is going to be the subject parameter') }}</x-slot>
         </x-jet-section-title>
     </div>
-    <div class="divider before:bg-gray-200 after:bg-gray-200"></div>
-    <div class="px-4 py-5 mt-5 rounded my-5 bg-white sm:p-6 shadow overflow-x-auto">
-        <form>
-            <!-- Name -->
-            <div class="grid gap-2 grid-cols-{{ $cols == 2 ? '3' : $cols }}">
-                <div>
-                    <x-label for="name" :value="__('Name')" />
-                </div>
-                {{-- <div>
-                    <x-label for="type" :value="__('Code')" />
-                </div> --}}
-                @forelse ($criterias as $criteria)
-                <div>
-                    <x-label for="{{ $criteria['id'] }}" :value="$criteria['name']" />
-                </div>
-                {{-- <div>
-                    <x-label for="type" :value="$criteria->pluck('name')"></x-label>
-                </div> --}}
+    <div class="px-4 py-5 mt-5 rounded my-5 bg-white sm:p-6 shadow">
+        <div class="grid grid-cols-4 sm:grid-cols-2">
+            <div class="col-start-1 col-end-2">
+                <x-jet-input wire:model.debounce.500ms="search" class="input input-secondary input-bordered" type="type" name="search" placeholder="search alternative by name" />
+            </div>
+            <div class="col-span-3 col-start-3 col-end-4 sm:flex flex justify-end">
+                <button type="button" wire:click="$emit('openModal', 'create-alternative', {{ json_encode(["project" => $project->id, "criteria_data" => $criteria_data]) }})"  class="btn btn-primary btn-active mr-4" role="button" aria-pressed="true">Create New</button>
+                <button type="button" wire:click="$emit('openTab', 'calculation')" class="btn btn-accent btn-active" role="button" aria-pressed="true">next step</button>
+            </div>
+        </div>
+        <div class="divider before:bg-gray-200 after:bg-gray-200"></div>
+        <div class="overflow-x-auto mt-5">
+            <table class="table w-full table-">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Name</th>
+                        @forelse ($criteria_data as $criteria_name )
+                        <th>{{ $criteria_name->name }}</th>
+                        @empty
+                        No Data
+                        @endforelse
+                        <th>Action</th>
+                    </tr>
+              </thead>
+              <tbody>
+                @forelse ($alternatives as $alternative)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $alternative->name }}</td>
+                    @forelse ($alternative->criterias as $alternative_criteria)
+                    <td>{{ $alternative_criteria->pivot->value }}</td>
+                    @empty
+
+                    @endforelse
+                    <td><button type="button" wire:click="$emit('openModal', 'create-alternative', {{ json_encode(["alternative" => $alternative,"project" => $project->id]) }})" class="btn btn-xs btn-outline">edit</button></td>
+                </tr>
                 @empty
-                <div>
-                    <x-label for="type" :value="__('Criteria')"></x-label>
-                </div>
+                <tr>
+                    <td colspan="4">No Data</td>
+                </tr>
                 @endforelse
-                <div>
-                    {{-- <x-label for="type" :value="__('Criterias')"></x-label> --}}
-                    <button wire:click="add" type="button" class="flex items-center rounded-md bg-blue-100 text-blue-600 hover:bg-blue-200 hover:text-blue-800 text-sm font-medium mt-1 px-4 py-2">
-                        <svg class="group-hover:text-blue-600 text-blue-500 mr-2" width="12" height="20" fill="currentColor">
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M6 5a1 1 0 011 1v3h3a1 1 0 110 2H7v3a1 1 0 11-2 0v-3H2a1 1 0 110-2h3V6a1 1 0 011-1z"/>
-                        </svg>
-                        New
-                    </button>
-                </div>
-            </div>
-            @foreach ($inputs as $key => $value)
-            <div wire:loading.attr="disabled" wire:target="addAlternative" class="grid gap-4 grid-cols-{{ $cols }}">
-                <div>
-                    <x-input wire:model="inputs.{{ $key }}.name" id="name[{{ $key }}][name]" class="block mt-1 w-full" type="text" name="name" autofocus />
-                </div>
-                {{-- <div>
-                    <x-input wire:model="inputs.{{ $key }}.a_code" id="a_code[{{ $key }}][a_code]" class="block mt-1 w-full" type="text" name="a_code" disabled />
-                </div> --}}
-                @foreach ($value['criterias'] as $k => $v)
-                <div class="hidden">
-                    <x-input value="{{ $v['id'] }}" wire:model="inputs.{{ $key }}.criterias.{{ $k }}.criteria_id" id="criteria_id[{{ $key }}][criteria_id]" type="hidden" name="criteria_id" placeholder="id" disabled />
-                </div>
-                <div>
-                    <x-input wire:model="inputs.{{ $key }}.criterias.{{ $k }}.value" id="value[{{ $key }}][value]" class="block mt-1 w-full" type="number" name="value" placeholder="max value = {{ $v['max_value'] }}" required />
-                </div>
-                @endforeach
-                <div class="flex w-full justify-end">
-                    <button wire:click="remove({{ $key }})" type="button" class="flex items-center rounded-md bg-red-100 text-red-600 hover:bg-red-200 hover:text-red-800 text-sm font-medium mt-2 px-4 py-2">
-                        <p class="mr-5"><strong> - </strong></p>
-                        Del
-                    </button>
-                </div>
-            </div>
-            @endforeach
-            <x-slot name="actions">
-                <x-button wire:click.prevent="addAlternative()" class="items-center mt-5">
-                    {{ __('Save') }}
-                </x-button>
-            </x-slot>
-        </form>
+              </tbody>
+            </table>
+          </div>
+        </div>
     </div>
 </div>
+
+

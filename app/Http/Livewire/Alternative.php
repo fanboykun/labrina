@@ -9,71 +9,32 @@ use Livewire\Component;
 
 class Alternative extends Component
 {
-    // property
-    public $name;
-    public $a_code = 1;
+    // // property
+    // public $altname;
     public $criterias = [];
+    public $criteria_data;
     public $project;
 
-    // helper
-    public $initial = "A";
-    public $inputs = [];
-    public $cols;
-    public $column = 2;
+    public $search;
+    public $listeners = [
+        'alternativeSaved' => '$refresh',
+    ];
+    // modal
+    public bool $isModalOpen = false;
 
     public function mount(Project $project)
     {
-        $this->project = $project;
-        $this->cols = Criteria::where('project_id', $project->id)->count() + $this->column;
-        $this->criterias = Criteria::where('project_id', $project->id)->get();
-        $this->inputs[] =
-            ['name' => '', 'criterias' => $this->criterias];
+        $this->project = $project->load('alternatives');
+        $this->criteria_data = Criteria::where('project_id', $project->id)->with('alternatives')->get();
     }
 
     public function render()
     {
-        return view('livewire.alternative');
-    }
-
-    public function add()
-    {
-
-        $this->a_code++;
-        $this->inputs[] =
-            ['name' => '', 'criterias' => $this->criterias];
-    }
-
-    public function remove($key)
-    {
-        unset($this->inputs[$key]);
-        $this->inputs = array_values($this->inputs);
-    }
-
-    public function addAlternative()
-    {
-        // dd($this->inputs);
-        $this->validate([
-            'inputs.*.name'=> 'required',
-        ],
-        [
-            'inputs.*.name.required'=> 'name field is required',
-        ]);
-            foreach($this->inputs as $data)
-                {
-                      $alternative =  AlternativeModel::create([
-                            'project_id' => $this->project->id,
-                            'name' => $data['name'],
-                            // 'a_code' => $data['a_code'],
-                        ]);
-                        foreach ($data['criterias'] as $criteria) {
-                            $alternative->criterias()->attach($criteria['id'], ['project_id' => $this->project->id, 'value' => $criteria['value']]);
-                        }
-                }
-        $this->reset(['name','inputs']);
-        $this->cols = Criteria::count() + $this->column;
-        $this->inputs[] =
-        ['name' => '', 'criterias' => $this->criterias];
-        $this->emit('openTab', 'calculate');
-
+        if ($this->project->alternatives->count() > 0) {
+            $alternatives = $this->project->alternatives->toQuery()->where('name', 'like', '%'.$this->search.'%')->with('criterias')->get();
+        }else{
+            $alternatives = [];
+        }
+        return view('livewire.alternative', ['alternatives' => $alternatives]);
     }
 }

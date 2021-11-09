@@ -38,6 +38,6 @@ class Projects extends Component
 
         $this->reset(['name', 'type']);
         // $this->emit('created', $project, 'criteria');
-        return redirect()->route('project.show', $project);
+        return redirect()->route('decission-support-system.show', $project);
     }
 }

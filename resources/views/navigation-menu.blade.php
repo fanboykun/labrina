@@ -17,30 +17,10 @@
                     </x-jet-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-jet-nav-link href="{{ route('decission-support-system') }}" :active="request()->routeIs('decission-support-system')">
+                    <x-jet-nav-link href="{{ route('decission-support-system') }}" :active="request()->routeIs('decission-support-system') || request()->routeIs('decission-support-system.show')">
                         {{ __('Decission Support System') }}
                     </x-jet-nav-link>
                 </div>
-                {{-- <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-jet-nav-link href="{{ route('calculations') }}" :active="request()->routeIs('calculations')">
-                        {{ __('Calculations') }}
-                    </x-jet-nav-link>
-                </div> --}}
-                {{-- <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('projects')" :active="request()->routeIs('projects')">
-                        {{ __('Projects') }}
-                    </x-nav-link>
-                </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('criteria')" :active="request()->routeIs('criteria')">
-                        {{ __('Criteria') }}
-                    </x-nav-link>
-                </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('alternative')" :active="request()->routeIs('alternative')">
-                        {{ __('Alternative') }}
-                    </x-nav-link>
-                </div> --}}
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ml-6">
@@ -159,7 +139,6 @@
             </div>
         </div>
     </div>
-
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
@@ -240,3 +219,5 @@
         </div>
     </div>
 </nav>
+<div class="divider mt-0 p-0 before:bg-gray-200 after:bg-gray-200"></div>
+

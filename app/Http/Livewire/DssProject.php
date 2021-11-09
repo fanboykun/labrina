@@ -50,12 +50,19 @@ class DssProject extends Component
     public function saveToRank(array $result)
     {
         foreach ($result as $key => $rank) {
-            $rangking = new Rangking();
-            $rangking->result = $rank['optimized_value'];
-            $rangking->rank = $rank['rank'];
-            $rangking->project()->associate($this->project);
-            $rangking->alternative()->associate($rank['alternative_id']);
-            $rangking->save();
+            Rangking::updateOrCreate([
+                'project_id' => $this->project->id,
+                'alternative_id' => $rank['alternative_id'],
+            ], [
+                'rank' => $rank['rank'],
+                'result' => $rank['optimized_value'],
+            ]);
+            // $rangking = new Rangking();
+            // $rangking->result = $rank['optimized_value'];
+            // $rangking->rank = $rank['rank'];
+            // $rangking->project()->associate($this->project);
+            // $rangking->alternative()->associate($rank['alternative_id']);
+            // $rangking->save();
         }
         return true;
     }

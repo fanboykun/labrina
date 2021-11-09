@@ -26,6 +26,6 @@ Route::get('/dashboard', function () {
 require __DIR__.'/auth.php';
 
 Route::get('/decission-support-system', DecissionSupportSystem::class)->middleware(['auth'])->name('decission-support-system');
-Route::get('/decission-support-system/{project}', DecissionSupportSystem::class)->middleware(['auth'])->name('project.show');
+Route::get('/decission-support-system/{project}', DecissionSupportSystem::class)->middleware(['auth'])->name('decission-support-system.show');
 // Route::get('/calculations', Calculations::class)->middleware(['auth'])->name('calculations');
 

@@ -10,6 +10,7 @@ class Rangkings extends Component
 {
     public $project;
     public $rangkings;
+    public $search;
 
     public function mount(Project $project)
     {
